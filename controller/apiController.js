@@ -3,10 +3,14 @@ const axios = require('axios')
 
 
 const ApiController = {
-    async apiGet (req,res) {
-        const listadoDeAutos = await Car.find()
-        res.status(200).json(listadoDeAutos)
-    },
+  async apiGet(req, res) {
+    try {
+      const listadoDeAutos = await Car.find();
+      res.status(200).json(listadoDeAutos);
+    } catch (error) {
+      res.status(500).json({ error: 'Error retrieving cars' }); 
+    }
+  },
     async getApi  (_, res) {
         try {
           const getCarsApi = await (
@@ -26,34 +30,60 @@ const ApiController = {
         }
     },
     async BuscarPorId (req, res){
-        const buscar = await Car.findById(req.params.id)
-        res.status(200).json(buscar)   
-    },
-    async searchModel  (req, res){
-        const item = await Car.findOne({modelo: req.params.modelo})
-        res.json({item})
-    },
-
-    async apiPost (req,res) {
-            const nuevoAuto = new Car(req.body)
-            await nuevoAuto.save()
-            res.status(201).json(nuevoAuto)
-    },
-
-
-    async apiPut (req,res) {
-        await Car.findByIdAndUpdate(req.params.id, req.body)
-        const buscar = await Car.findById(req.params.id)
+        try {const buscar = await Car.findById(req.params.id)
         res.status(200).json(buscar)
+        }catch (error) {
+          res.status(500).send(error);
+        }
+          
+    },
+    async searchModel(req, res) {
+      try {
+        const item = await Car.findOne({ modelo: req.params.modelo });
+    
+        if (!item) {
+          res.status(404).json({ error: 'Auto no encontrado' });
+        } else {
+          res.json({ item });
+        }
+      } catch (error) {
+        res.status(500).json({ error: 'Error al encontrar el auto' });
+      }
+    },
+
+    async apiPost(req, res) {
+      try {
+        const nuevoAuto = new Car(req.body);
+        await nuevoAuto.save();
+        res.status(201).json(nuevoAuto);
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
     },
 
 
-    async apiDelete (req,res) {
-        await Car.findByIdAndDelete(req.params.id)
+    async apiPut(req, res) {
+      try {
+        await Car.findByIdAndUpdate(req.params.id, req.body);
+        const buscar = await Car.findById(req.params.id);
+        res.status(200).json(buscar);
+      } catch (error) {
+        res.status(400).json({ error: error.message }); 
+      }
+    },
+
+
+    async apiDelete(req, res) {
+      try {
+        await Car.findByIdAndDelete(req.params.id);
         res.status(200).json({
-            msg: "El auto con el id" + req.params.id + " fue borrado"
-        })
-    },
+          msg: "El auto con el id " + req.params.id + " fue borrado"
+        });
+      } catch (error) {
+          res.status(404).json({ error: 'Auto no encontrado' });
+        
+      }
+    }
 }
 
 module.exports = ApiController

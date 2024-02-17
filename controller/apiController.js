@@ -14,15 +14,7 @@ const ApiController = {
     async getApi  (_, res) {
         try {
           const getCarsApi = await (
-            await axios("http://localhost:3000/cars")
-          ).data.map((e) => V2Cars.create({
-            id: e.id,
-            marca: e.marca,
-            modelo: e.modelo,
-            color: e.color,
-            año: e.año,
-            pais: e.pais
-          }));
+            await axios("https://parallelum.com.br/fipe/api/v1/carros/marcas"));
           console.log(getCarsApi);
           res.status(200).send(getCarsApi);
         } catch (error) {

@@ -8,7 +8,7 @@ const {validarModelo} = require('../middlewares/validarmodelo')
 
 router.get('/list', ApiController.apiGet)
 router.get('/auto/:id',validarId ,ApiController.BuscarPorId)
-router.get("/", ApiController.getApi)
+router.get("/marcas", ApiController.getApi)
 router.get('/modelo/:modelo', validarModelo, ApiController.searchModel)
 
 router.post('/crear',checks, validarCheck, ApiController.apiPost)

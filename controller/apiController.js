@@ -11,16 +11,18 @@ const ApiController = {
       res.status(500).json({ error: 'Error retrieving cars' }); 
     }
   },
-    async getApi  (_, res) {
-        try {
-          const getCarsApi = await (
-            await axios("https://parallelum.com.br/fipe/api/v1/carros/marcas"));
-          console.log(getCarsApi);
-          res.status(200).send(getCarsApi);
-        } catch (error) {
-          res.status(500).send(error);
-        }
-    },
+
+  async getApi  (_, res) {
+    try {
+      const getCarsApi = await (
+        await axios("https://parallelum.com.br/fipe/api/v1/carros/marcas"));
+      console.log(getCarsApi);
+      res.status(200).json(getCarsApi.data);
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  },
+
     async BuscarPorId (req, res){
         try {const buscar = await Car.findById(req.params.id)
         res.status(200).json(buscar)
